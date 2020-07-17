@@ -1,8 +1,11 @@
 package com.microdiscovery.course.catalog.core.service;
 
-import com.microdiscovery.course.catalog.core.model.Course;
+import com.microdiscovery.course.catalog.core.dto.response.CoursePriceDto;
+
+import org.hibernate.ObjectNotFoundException;
+
 
 public interface CourseCatalogService {
  
-    public String getCoursePriceById(String email, String id);
+    public CoursePriceDto getCoursePriceById(String email, String id) throws ObjectNotFoundException;
 }

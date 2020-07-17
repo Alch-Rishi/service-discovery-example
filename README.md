@@ -43,3 +43,4 @@ curl http://localhost:8082/api/v1/user/ado@abc.com/course/CS95
 2) Exceptions can be implemented separately.
 3) Data insertion can be moved to data.sql file.
 4) User is fetched from its email only, so its assumed to be unique and belongs to the particular user only
+5) The whole Course details are sent now instead of price only for more options on frontend

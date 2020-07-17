@@ -1,11 +1,14 @@
 package com.microdiscovery.course.catalog.core.service.impl;
 
+import com.microdiscovery.course.catalog.core.dto.mapper.CourseMapper;
+import com.microdiscovery.course.catalog.core.dto.response.CoursePriceDto;
 import com.microdiscovery.course.catalog.core.fulfillment.UserInfoClient;
 import com.microdiscovery.course.catalog.core.model.Course;
 import com.microdiscovery.course.catalog.core.model.User;
 import com.microdiscovery.course.catalog.core.repository.CourseRepository;
 import com.microdiscovery.course.catalog.core.service.CourseCatalogService;
 
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,22 +22,20 @@ public class CourseCatalogServiceImpl implements CourseCatalogService{
     private UserInfoClient userInfoClient;
 
     @Override
-    public String getCoursePriceById(String email, String id){
+    public CoursePriceDto getCoursePriceById(String email, String id) throws ObjectNotFoundException{
         User user = userInfoClient.getUserByEmail(email);
         if(user == null){
-            return "User with email id " + email + " not found";
+            throw new ObjectNotFoundException("User email id not found.", email);
         }
 
         Course course = courseRepository.findById(id).orElse(null);
         if(course == null){
-            return "Course with id " + id + " not found";
+            throw new ObjectNotFoundException("Course not found.", id);
         }
 
-        if(user.getCountry().equalsIgnoreCase(course.getCountry())){
-            return "Price for the course is " + course.getDomesticPrice();
-        }else {
-            return "Price for the course is " +  course.getInternationalPrice();
-        }
+        return CourseMapper.toCoursePriceDto(course, user.getCountry().equalsIgnoreCase(course.getCountry()) ? 
+                                                        course.getDomesticPrice() : course.getInternationalPrice());
+ 
 
     }
 
